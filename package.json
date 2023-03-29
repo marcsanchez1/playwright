@@ -1,0 +1,23 @@
+{
+  "name": "playwright",
+  "version": "1.0.0",
+  "description": "Automated software testing with Playwright",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcsanchez1/playwright.git"
+  },
+  "author": "Marc Sanchez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcsanchez1/playwright/issues"
+  },
+  "homepage": "https://github.com/marcsanchez1/playwright#readme",
+  "dependencies": {
+    "@playwright/test": "^1.32.1",
+    "prettier": "^2.8.7"
+  }
+}
