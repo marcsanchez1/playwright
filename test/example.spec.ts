@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { loadHomepage, assertTitle } from '../helpers'
 
 test('Simple basic test',async ( {page} ) => {
   await page.goto('https://www.example.com')
@@ -66,4 +67,28 @@ test.skip('Selectors', async ({page}) => {
   // XPath
   await page.click('//button')
   
+})
+
+test.describe.parallel.only('Hooks', () => {
+  test.beforeEach(async ({page}) => {
+    await page.goto('https://www.example.com')
+  })
+
+  test('Screenshots', async ({page}) => {
+    // await page.goto('https://www.example.com')
+    await page.screenshot({path: 'screeshots/screenshot.png', fullPage: true})
+  })
+  
+  test('Single element Screenshots', async ({page}) => {
+    // await page.goto('https://www.example.com')
+    const element = await page.$('h1')
+    await element.screenshot({path: 'screeshots/single-element-ss.png', })
+  })
+})
+
+test('Custom Helpers', async ({page}) => {
+  await loadHomepage(page)
+  await assertTitle(page)
 });
+
+// Run project from config: npx playwright test --config=playwright.config.ts --project=webkit
