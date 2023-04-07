@@ -4,6 +4,7 @@ const config: PlaywrightTestConfig = {
   timeout: 15000,
   retries: 0,
   testDir: 'test/e2e',
+  reporter: [['html', { printSteps: true }]],
   use: {
     headless: true,
     viewport: {width: 1280, height: 720},
