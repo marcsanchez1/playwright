@@ -26,8 +26,7 @@ test.describe.parallel("Login / Logout Flow", () => {
     await page.click('#signin_button')
     await page.type('#user_login', 'username')
     await page.type('#user_password', 'password')
-    // await page.click('text = Sign in')
-    await page.getByText('Sign in').click()
+    await page.click('text = Sign in')
 
     await page.goto('http://zero.webappsecurity.com/bank/account-summary.html')
     
