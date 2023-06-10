@@ -3,6 +3,7 @@ import { PlaywrightTestConfig } from "@playwright/test"
 const config: PlaywrightTestConfig = {
   timeout: 15000,
   retries: 0,
+  reporter: [['list', { printSteps: true }]],
   use: {
     headless: true,
     viewport: {width: 1280, height: 720},
