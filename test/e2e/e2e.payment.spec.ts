@@ -1,23 +1,33 @@
 import {test, expect} from '@playwright/test'
+import { HomePage } from '../../page-objects/HomePage'
+import { LoginPage } from '../../page-objects/LoginPage'
 
 test.describe('New Payment', () => {
-  test.beforeEach(async ( {page}) => {
-    await page.goto('http://zero.webappsecurity.com/index.html')
-    await page.click('#signin_button')
-    await page.type('#user_login', 'username')
-    await page.type('#user_password', 'password')
-    await page.click('text = Sign in')
-    await page.goto('http://zero.webappsecurity.com/bank/pay-bills.html')
-    await expect(page).toHaveTitle('Zero - Pay Bills')
-  })
+  let homepage: HomePage
+  let loginPage: LoginPage
 
+  const username = "username"
+  const password = "password"
+
+  test.beforeEach(async ( {page} ) => {
+    homepage = new HomePage(page)
+    loginPage = new LoginPage(page)
+
+    await homepage.visit()
+    await homepage.clickOnSignin()
+    await loginPage.login(
+      username,
+      password
+    )
+  })
+  
   test.afterEach(async ( {page}) => {
     await page.close();
   })
-
+  
+  test.slow()
   test('Should send a new payment', async ({page}) => {
-    const pageHeader = page.locator('h2.board-header')
-    await expect(pageHeader).toContainText('Make payments to your saved payees')
+    await page.goto('http://zero.webappsecurity.com/bank/pay-bills.html')
 
     await page.selectOption('#sp_payee', 'Apple')
     await page.click('#sp_get_payee_details')

@@ -1,21 +1,37 @@
 import {test, expect} from '@playwright/test'
+import { HomePage } from '../../page-objects/HomePage'
+import { LoginPage } from '../../page-objects/LoginPage'
 
 test.describe.only('New Payment', () => {
-  test.beforeEach(async ( {page}) => {
-    await page.goto('http://zero.webappsecurity.com/index.html')
-    await page.click('#signin_button')
-    await page.type('#user_login', 'username')
-    await page.type('#user_password', 'password')
-    await page.click('text = Sign in')
-    await page.goto('http://zero.webappsecurity.com/bank/pay-bills.html')
-    await expect(page).toHaveTitle('Zero - Pay Bills')
+  let homepage: HomePage
+  let loginPage: LoginPage
+
+  const username = "username"
+  const password = "password"
+
+  test.beforeEach(async ( {page} ) => {
+    homepage = new HomePage(page)
+    loginPage = new LoginPage(page)
+
+    await homepage.visit()
+    await homepage.clickOnSignin()
+    await loginPage.login(
+      username,
+      password
+    )
+    
+    await page.waitForTimeout(1000)
   })
 
   test.afterEach(async ( {page}) => {
     await page.close();
   })
 
+  test.slow()
   test('Foreign Currency Exchange', async ({page}) => {
+    await page.goto('http://zero.webappsecurity.com/bank/pay-bills.html')
+    await expect(page).toHaveTitle('Zero - Pay Bills')
+    await page.waitForTimeout(1000)
     page.click("a[href='#ui-tabs-3']")
     await page.waitForSelector('#ui-tabs-3 h2.board-header')
     const header = await page.locator('#ui-tabs-3 h2.board-header')
@@ -23,9 +39,10 @@ test.describe.only('New Payment', () => {
     expect.soft(header).toContainText("Purchase foreign currency cash")
 
     await page.selectOption('#pc_currency', 'JPY')
-    // await expect(page.locator('#pc_currency')).toContain('Japan (yen)')
+
     const rate = page.locator('#sp_sell_rate')
     expect.soft(rate).toContainText('1 yen (JPY) = 0.01244 U.S. dollar (USD)')
+
     await page.type('#pc_amount', '500')
     await page.click('#pc_inDollars_true')
     await page.click('#pc_calculate_costs')

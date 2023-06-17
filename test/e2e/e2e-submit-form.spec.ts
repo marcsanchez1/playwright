@@ -1,9 +1,22 @@
 import {test, expect } from '@playwright/test'
+import { HomePage } from '../../page-objects/HomePage'
+import { FeedbackPage } from '../../page-objects/FeedbackPage'
 
 test.describe('Feedback form', () => {
+  let homepage: HomePage
+  let feedbackPage: FeedbackPage
+
+  const name = "Marc Sanchez"
+  const email = "email@study.com"
+  const subject = "Subject goes here"
+  const comment = "Comment goes here"
+
   test.beforeEach(async ({page}) => {
-    await page.goto('http://zero.webappsecurity.com/index.html')
-    await page.click('#feedback')
+    homepage = new HomePage(page)
+    feedbackPage = new FeedbackPage(page)
+
+    await homepage.visit()
+    await homepage.clickFeedbackLink()
   })
 
   test.afterEach(async ({page}) => {
@@ -12,28 +25,38 @@ test.describe('Feedback form', () => {
 
   // Reset Feedback form
   test('Reset feedback form', async ({page}) => {
-    await page.type('#name', 'first Last')
-    await page.type('#email', 'myEmail@test.com')
-    await page.type('#subject', 'The Subject')
-    await page.type('#comment', 'Your comment goes in here')
-    await page.click("input[value='Clear']")
 
-    const nameInput = await page.locator('#name')
-    const commentInput = await page.locator('#comment')
+    // Fill Form
+    await feedbackPage.fillForm(
+      name,
+      email,
+      subject,
+      comment
+      )
 
-    await expect(nameInput).toBeEmpty()
-    await expect(commentInput).toBeEmpty()
+    // Reset out form
+    await feedbackPage.resetForm()
+
+    // Assert form is empty after reset
+    await feedbackPage.assertReset()
   });
 
   // Submitt Feedback form
   test('Submit feedback form', async ({page}) => {
-    await page.type('#name', 'first Last')
-    await page.type('#email', 'myEmail@test.com')
-    await page.type('#subject', 'The Subject')
-    await page.type('#comment', 'Your comment goes in here')
-    await page.click("input[value='Send Message']")
 
-    await page.waitForSelector('#feedback-title')
+    // Fill out form
+    await feedbackPage.fillForm(
+      name,
+      email,
+      subject,
+      comment
+    )
+
+    // Submit the form
+    await feedbackPage.submitForm()
+
+    // Assert the sent message is visible
+    await feedbackPage.assertFeedbackFormSent()
 
   });
 })

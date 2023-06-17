@@ -1,12 +1,24 @@
 import { test, expect } from '@playwright/test'
+import { HomePage } from '../../page-objects/HomePage'
+import { LoginPage } from '../../page-objects/LoginPage'
 
 test.describe('Transfer funds and make payments', () => {
+  let homepage: HomePage
+  let loginPage: LoginPage
+
   test.beforeEach(async ( {page}) => {
-    await page.goto('http://zero.webappsecurity.com/index.html')
-    await page.click('#signin_button')
-    await page.type('#user_login', 'username')
-    await page.type('#user_password', 'password')
-    await page.click('text = Sign in')
+    homepage = new HomePage(page)
+    loginPage = new LoginPage(page)
+
+    const username = "username"
+    const password = "password"
+
+    await homepage.visit()
+    await homepage.clickOnSignin()
+    await loginPage.login(
+      username,
+      password
+    )
     await page.goto('http://zero.webappsecurity.com/bank/account-summary.html')
   })
 
@@ -14,6 +26,7 @@ test.describe('Transfer funds and make payments', () => {
     await page.close();
   })
 
+  test.slow()
   test('Transfer funds',async ( {page}) => {
     const transferFundsPageHeader = await page.locator('h2.board-header')
     const transferVerifyText = 'Transfer Money & Make Payments - Verify'
