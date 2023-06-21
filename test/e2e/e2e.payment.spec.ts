@@ -1,6 +1,8 @@
 import {test, expect} from '@playwright/test'
 import { HomePage } from '../../page-objects/HomePage'
 import { LoginPage } from '../../page-objects/LoginPage'
+import { Navbar } from '../../page-objects/components/Navbar'
+import { PaymentPage } from '../../page-objects/paymentPage'
 
 test.describe('New Payment', () => {
   let homepage: HomePage
@@ -19,6 +21,7 @@ test.describe('New Payment', () => {
       username,
       password
     )
+    await page.goto('http://zero.webappsecurity.com/bank/account-summary.html')
   })
   
   test.afterEach(async ( {page}) => {
@@ -27,21 +30,18 @@ test.describe('New Payment', () => {
   
   test.slow()
   test('Should send a new payment', async ({page}) => {
-    await page.goto('http://zero.webappsecurity.com/bank/pay-bills.html')
+    let navbar: Navbar = new Navbar(page)
+    let paymentPage: PaymentPage = new PaymentPage(page)
 
-    await page.selectOption('#sp_payee', 'Apple')
-    await page.click('#sp_get_payee_details')
-    await page.waitForSelector('#sp_payee_details')
-    await page.selectOption('#sp_account', '6')
-    await page.type('#sp_amount', '5000')
-    await page.type('#sp_date', '2019-11-09')
-    await page.type('#sp_description', 'Fake description')
-    await page.click('input[type="submit"]')
+    await navbar.clickOnTab('Pay Bills')
 
-    const message = page.locator('#alert_content > span')
-    await expect(message).toBeVisible()
-    await expect(message).toContainText('The payment was successfully submitted.')
+    await paymentPage.sendPayment(
+      'Bank of America',
+      'Savings',
+      '5000',
+      '2019-11-09')
 
-    await page.waitForTimeout(2000)
+    await paymentPage.successMessage()
+
   });
 })
