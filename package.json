@@ -7,7 +7,13 @@
     "tests:chrome": "npx playwright test --config=playwright.config.ts --project=chromium",
     "tests:firefox": "npx playwright test --config=playwright.config.ts --project=firefox",
     "tests:webkit": "npx playwright test --config=playwright.config.ts --project=webkit",
-    "tests:e2e": "playwright test --config=e2e.config.ts --project=chromium --reporter=list"
+    "tests:e2e": "playwright test --config=e2e.config.ts --project=chromium --reporter=list",
+    "tests:visual:chrome": "playwright test --config=visual.config.ts --project=chromium",
+    "tests:visual:firefox": "playwright test --config=visual.config.ts --project=firefox",
+    "tests:visual:webkit": "playwright test --config=visual.config.ts --project=webkit",
+    "tests:visual:chrome:update": "playwright test --config=visual.config.ts --project=chromium --update-snapshots",
+    "tests:visual:firefox:update": "playwright test --config=visual.config.ts --project=firefox --update-snapshots",
+    "tests:visual:webkit:update": "playwright test --config=visual.config.ts --project=webkit --update-snapshots"
   },
   "repository": {
     "type": "git",
